@@ -20,16 +20,19 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
+
+
 app.use(fileUpload({
   debug: true
 }));
 
-const SESSION_FILE_PATH = './whatsapp-session.json';
+
+// const SESSION_FILE_PATH = './whatsapp-session.json';
 let sessionCfg;
 
-if (fs.existsSync(SESSION_FILE_PATH)) {
-  sessionCfg = require(SESSION_FILE_PATH);
-}
+// if (fs.existsSync(SESSION_FILE_PATH)) {
+//   sessionCfg = require(SESSION_FILE_PATH);
+// }
 
 const client = new Client({
     restartOnAuthFail: true,
@@ -75,26 +78,26 @@ io.on('connection', function(socket) {
       socket.emit('session', session);
       console.log('AUTHENTICATED', session);
       sessionCfg = session;
-      fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function(err) {
-        if (err) {
-          console.error(err);
-        }
-      });
+      // fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function(err) {
+      //   if (err) {
+      //     console.error(err);
+      //   }
+      // });
     });
   
     client.on('auth_failure', function(session) {
       socket.emit('message', 'Auth failure, restarting...');
     });
   
-    client.on('disconnected', (reason) => {
-      socket.emit('message', 'Whatsapp is disconnected!');
-      fs.unlinkSync(SESSION_FILE_PATH, function(err) {
-          if(err) return console.log(err);
-          console.log('Session file deleted!');
-      });
-      client.destroy();
-      client.initialize();
-    });
+    // client.on('disconnected', (reason) => {
+    //   socket.emit('message', 'Whatsapp is disconnected!');
+    //   // fs.unlinkSync(SESSION_FILE_PATH, function(err) {
+    //   //     if(err) return console.log(err);
+    //   //     console.log('Session file deleted!');
+    //   // });
+    //   client.destroy();
+    //   client.initialize();
+    // });
   });
   
 
